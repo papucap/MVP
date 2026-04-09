@@ -11,6 +11,12 @@ namespace MVP
     public class Server
     {
         private TcpListener listener;
+        private GameManager gameManager;
+
+        public Server(GameManager gm)
+        {
+            gameManager = gm;
+        }
 
         public async Task Start(int port)
         {
@@ -20,7 +26,7 @@ namespace MVP
             while (true)
             {
                 var client = await listener.AcceptTcpClientAsync();
-                var handler = new ClientHandler(client);
+                var handler = new ClientHandler(client, gameManager);
                 _ = handler.Handle();
             }
         }
