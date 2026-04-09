@@ -21,7 +21,9 @@ public class Player
         }
 
         foreach (var item in Inventory)
-            SendMessage(item.Name);
+            {
+                SendMessage(item.Name);
+            }
     }
 }
 }
