@@ -4,11 +4,6 @@
     {
         static void Main(string[] args)
         {
-            //ahoj
-
-            //ahoj2
-
-            //Patrik
         }
     }
 }
