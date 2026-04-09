@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-
+namespace MVP { 
 public class GameManager
 {
     public Dictionary<string, Player> Players = new();
@@ -30,4 +30,5 @@ public class GameManager
         foreach (var p in Players.Values)
             p.SendMessage(message);
     }
+}
 }

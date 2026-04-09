@@ -1,4 +1,6 @@
-﻿public class Logger
+﻿namespace MVP
+{ 
+public class Logger
 {
     private string path = "logs/server.log";
 
@@ -7,4 +9,5 @@
         var line = $"[{DateTime.Now}] {message}";
         File.AppendAllText(path, line + "\n");
     }
+}
 }

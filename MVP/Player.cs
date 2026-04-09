@@ -1,4 +1,6 @@
-﻿public class Player
+﻿namespace MVP
+{ 
+public class Player
 {
     public string Name { get; set; }
     public Room CurrentRoom { get; set; }
@@ -21,4 +23,5 @@
         foreach (var item in Inventory)
             SendMessage(item.Name);
     }
+}
 }

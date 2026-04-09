@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-
+namespace MVP { 
 public class CommandHandler
 {
     private GameManager gameManager;
@@ -35,4 +35,5 @@ public class CommandHandler
                 break;
         }
     }
+}
 }
