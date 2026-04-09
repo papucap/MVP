@@ -9,7 +9,10 @@
     public string Talk()
     {
         if (Dialogues == null || Dialogues.Count == 0)
+        {
             return "NPC mlčí.";
+        }
+            
 
         var response = Dialogues[dialogueIndex];
         dialogueIndex = (dialogueIndex + 1) % Dialogues.Count;

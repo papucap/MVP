@@ -5,7 +5,10 @@ public class TradeSystem
     public string Buy(Player player, Item item, int price)
     {
         if (player.Money < price)
+        {
             return "Nemáš dost peněz.";
+        }
+            
 
         player.Money -= price;
         player.Inventory.Add(item);
@@ -16,7 +19,10 @@ public class TradeSystem
     public string Sell(Player player, Item item, int price)
     {
         if (!player.Inventory.Contains(item))
+        {
             return "Tento item nemáš.";
+        }
+            
 
         player.Inventory.Remove(item);
         player.Money += price;
