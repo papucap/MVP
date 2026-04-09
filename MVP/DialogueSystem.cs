@@ -1,15 +1,18 @@
 ﻿using System.Numerics;
-
-public class DialogueSystem
+namespace MVP
 {
-    public string GetDialogue(NPC npc, Player player)
+    public class DialogueSystem
     {
-        if (player.Money < 500)
+        public string GetDialogue(NPC npc, Player player)
         {
-            return "Nejdřív vydělej víc peněz.";
-        }
-            
+            if (player.Money < 500)
+            {
+                return "Nejdřív vydělej víc peněz.";
+            }
 
-        return npc.Talk();
+
+            return npc.Talk();
+        }
     }
+
 }

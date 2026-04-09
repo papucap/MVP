@@ -1,22 +1,25 @@
-﻿public class NPC
+﻿namespace MVP
 {
-    public string Name { get; set; }
-    public string CurrentRoomId { get; set; }
-    public List<string> Dialogues { get; set; }
-
-    private int dialogueIndex = 0;
-
-    public string Talk()
+    public class NPC
     {
-        if (Dialogues == null || Dialogues.Count == 0)
+        public string Name { get; set; }
+        public string CurrentRoomId { get; set; }
+        public List<string> Dialogues { get; set; }
+
+        private int dialogueIndex = 0;
+
+        public string Talk()
         {
-            return "NPC mlčí.";
+            if (Dialogues == null || Dialogues.Count == 0)
+            {
+                return "NPC mlčí.";
+            }
+
+
+            var response = Dialogues[dialogueIndex];
+            dialogueIndex = (dialogueIndex + 1) % Dialogues.Count;
+
+            return response;
         }
-            
-
-        var response = Dialogues[dialogueIndex];
-        dialogueIndex = (dialogueIndex + 1) % Dialogues.Count;
-
-        return response;
     }
 }
