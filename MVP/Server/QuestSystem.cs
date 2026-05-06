@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVP
+namespace MVP.Server
 {
     public class QuestSystem
     {
         public List<string> Completed = new();
 
-        public string CompleteQuest(Player player, string quest)
+        public string CompleteQuest(MVP.Server.Server.Player player, string quest)
         {
             if (Completed.Contains(quest))
             {

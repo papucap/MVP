@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
-namespace MVP
+namespace MVP.Server
 {
     public class TradeSystem
     {
-        public string Buy(Player player, Item item, int price)
+        public string Buy(MVP.Server.Server.Player player, Item item, int price)
         {
             if (player.Money < price)
             {
@@ -17,7 +17,7 @@ namespace MVP
             return $"Koupil jsi {item.Name} za {price} Kč.";
         }
 
-        public string Sell(Player player, Item item, int price)
+        public string Sell(MVP.Server.Server.Player player, Item item, int price)
         {
             if (!player.Inventory.Contains(item))
             {

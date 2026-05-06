@@ -1,4 +1,4 @@
-﻿namespace MVP
+﻿namespace MVP.Server
 { 
 public class Logger
 {

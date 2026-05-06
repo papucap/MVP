@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "Doruè balíèek",
+    "Description": "Dones balíèek dealerovi.",
+    "TargetNPC": "dealer",
+    "RequiredItem": "balicek",
+    "RewardMoney": 300
+  },
+  {
+    "Name": "Vzácná bylina",
+    "Description": "Najdi vzácnou bylinu v parku.",
+    "TargetRoom": "park",
+    "RequiredItem": "vzácná_bylina",
+    "RewardMoney": 200
+  }
+]

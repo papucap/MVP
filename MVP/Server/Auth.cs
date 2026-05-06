@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVP
+namespace MVP.Server
 {
     public class Auth
     {
@@ -28,7 +28,7 @@ namespace MVP
         private string Hash(string input)
         {
             return Convert.ToBase64String(
-                System.Text.Encoding.UTF8.GetBytes(input)
+                Encoding.UTF8.GetBytes(input)
             );
         }
     }

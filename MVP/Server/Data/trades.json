@@ -1,0 +1,18 @@
+{
+  "dealer": {
+    "sell": [
+      { "item": "prasek", "price": 200 },
+      { "item": "extrakt", "price": 500 }
+    ],
+    "buy": [
+      { "item": "bylina", "price": 50 },
+      { "item": "vzácná_bylina", "price": 150 }
+    ]
+  },
+  "zakaznik": {
+    "buy": [
+      { "item": "prasek", "price": 300 },
+      { "item": "extrakt", "price": 700 }
+    ]
+  }
+}

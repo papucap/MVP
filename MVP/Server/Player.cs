@@ -1,4 +1,4 @@
-﻿namespace MVP
+﻿namespace MVP.Server.Server
 { 
 public class Player
 {
@@ -7,7 +7,9 @@ public class Player
     public List<Item> Inventory { get; set; } = new();
     public int Money { get; set; } = 1000;
 
-    public void SendMessage(string msg)
+    public string ActiveQuest { get; set; }
+
+        public void SendMessage(string msg)
     {
         Console.WriteLine(msg);
     }

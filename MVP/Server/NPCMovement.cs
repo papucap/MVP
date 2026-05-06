@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVP
+namespace MVP.Server
 {
     public class NPCMovement
     {
