@@ -43,22 +43,6 @@ např. doručení balíčku do určité lokace
 
 odměny ve formě peněz nebo itemů
 
-Struktura projektu
-MVP/
-├── Server/
-│   ├── GameManager.cs
-│   ├── CommandHandler.cs
-│   ├── GameServer.cs
-│   ├── ClientHandler.cs
-│   ├── WorldLoader.cs
-│   └── data/
-│       ├── rooms.json
-│       ├── items.json
-│       ├── npcs.json
-│       ├── trades.json
-│       ├── quests.json
-│       └── dialogues.json
-
 
 
 
