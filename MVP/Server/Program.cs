@@ -1,24 +1,25 @@
-﻿using MVP.Server;
-using MVP.Server.Server;
+﻿using MVP.Server.Server;
 
-namespace MVP.Server;
-class Program
+namespace MVP.Server
 {
-    static async Task Main(string[] args)
+    class Program
     {
-        var gameManager = new GameManager();
+        static async Task Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.InputEncoding = System.Text.Encoding.UTF8;
 
-        // načtení světa
-        var loader = new WorldLoader();
-        gameManager.Rooms = loader.LoadWorld();
 
-        // systémy
-        gameManager.Trade = new TradeSystem();
-        gameManager.Dialogue = new DialogueSystem();
-        gameManager.Quest = new QuestSystem();
+            var gameManager = new GameManager();
 
-        // server
-        var server = new GameServer(gameManager); 
-        await server.Start(5001);
+            var loader = new WorldLoader();
+            gameManager.Rooms = loader.LoadWorld();
+            gameManager.Items = loader.LoadItems(); // pokud jsi přidal metodu
+
+            _ = gameManager.StartNPCMovement();
+
+            var server = new GameServer(gameManager);
+            await server.Start(5001);
+        }
     }
 }

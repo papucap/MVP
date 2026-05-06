@@ -1,18 +1,37 @@
 {
-  "club": {
-    "Id": "club",
-    "Name": "Noèní klub",
-    "Description": "Hlasitá hudba, lidi tanèí a obchod jede.",
-    "Exits": ["park", "trh"],
+  "klub": {
+    "Name": "Nocni klub",
+    "Description": "Hlasita hudba, svetla a dealer v rohu. Da se tu nakupovat.",
+    "Exits": ["ulice", "park"],
     "Items": [],
     "NPCsIds": ["dealer"]
   },
-  "park": {
-    "Id": "park",
-    "Name": "Temný park",
-    "Description": "Podezøelé místo pro schùzky.",
-    "Exits": ["club"],
-    "Items": [],
+  "ulice": {
+    "Name": "Temna ulice",
+    "Description": "Uzka ulicka. Obcas tu najdes balicek.",
+    "Exits": ["klub", "trh"],
+    "Items": [
+      { "Name": "balicek" }
+    ],
     "NPCsIds": []
+  },
+  "park": {
+    "Name": "Park",
+    "Description": "Rostou tu byliny. Hodi se na prodej dealerovi.",
+    "Exits": ["klub"],
+    "Items": [
+      { "Name": "bylina" },
+      { "Name": "vzacna_bylina" }
+    ],
+    "NPCsIds": []
+  },
+  "trh": {
+    "Name": "Cerny trh",
+    "Description": "Najdes tu zakaznika, co dobre plati.",
+    "Exits": ["ulice"],
+    "Items": [
+      { "Name": "susena_houba" }
+    ],
+    "NPCsIds": ["zakaznik"]
   }
 }

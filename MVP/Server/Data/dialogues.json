@@ -1,6 +1,26 @@
 {
   "dealer": {
-    "lowMoney": "Nejdøív si vydìlej.",
-    "default": "Co chceš koupit?"
+    "lowMoney": "Nemáš dost penìz.",
+    "default": [
+      "Sháníš nìco? Prodávám prášek  a extrakt .",
+      "Mám kvalitu. Kup: prasek , extrakt .",
+      "Když máš byliny, taky je beru. Zkus 'prodej bylina'."
+    ],
+    "tips": [
+      "Použij: kup prasek",
+      "Použij: kup extrakt",
+      "Mùžeš mi prodat: bylina nebo vzácná_bylina"
+    ]
+  },
+  "zakaznik": {
+    "default": [
+      "Koupím prášek.",
+      "Extrakt beru.",
+      "Jestli nìco máš, napiš 'prodej prasek' nebo 'prodej extrakt'."
+    ],
+    "tips": [
+      "Použij: prodej prasek",
+      "Použij: prodej extrakt"
+    ]
   }
 }

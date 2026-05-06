@@ -11,15 +11,11 @@ public class WorldLoader
         var npcsPath = Path.Combine(basePath, "data", "npcs.json");
         var itemsPath = Path.Combine(basePath, "data", "items.json");
 
-        var rooms = JsonSerializer.Deserialize<Dictionary<string, Room>>(
-            File.ReadAllText(roomsPath));
+        var rooms = JsonSerializer.Deserialize<Dictionary<string, Room>>(File.ReadAllText(roomsPath));
+        var npcs = JsonSerializer.Deserialize<List<NPC>>(File.ReadAllText(npcsPath));
+        var items = JsonSerializer.Deserialize<List<Item>>(File.ReadAllText(itemsPath));
 
-        var npcs = JsonSerializer.Deserialize<List<NPC>>(
-            File.ReadAllText(npcsPath));
-
-        var items = JsonSerializer.Deserialize<List<Item>>(
-            File.ReadAllText(itemsPath));
-
+        // 🔥 NPC napojení + CurrentRoom
         foreach (var room in rooms.Values)
         {
             foreach (var npcId in room.NPCsIds)
@@ -27,19 +23,27 @@ public class WorldLoader
                 var npc = npcs.FirstOrDefault(n => n.Name == npcId);
                 if (npc != null)
                 {
+                    npc.CurrentRoom = room; // 👈 důležité
                     room.NPCs.Add(npc);
                 }
             }
         }
 
-        // napojení itemů podle jména
+        // 🔥 Items napojení
         foreach (var room in rooms.Values)
         {
-            room.Items = items
-                .Where(i => room.Items.Any(x => x.Name == i.Name))
-                .ToList();
+            
         }
 
         return rooms;
     }
+
+    public List<Item> LoadItems()
+    {
+        var basePath = AppContext.BaseDirectory;
+        var itemsPath = Path.Combine(basePath, "data", "items.json");
+
+        return JsonSerializer.Deserialize<List<Item>>(File.ReadAllText(itemsPath));
+    }
+
 }

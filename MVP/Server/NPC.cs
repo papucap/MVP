@@ -5,6 +5,8 @@
         public string Name { get; set; }
         public string CurrentRoomId { get; set; }
         public List<string> Dialogues { get; set; }
+        public Room CurrentRoom { get; set; }
+
 
         private int dialogueIndex = 0;
 

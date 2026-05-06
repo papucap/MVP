@@ -1,11 +1,20 @@
-[
+﻿[
   {
     "Name": "dealer",
-    "CurrentRoomId": "club",
     "Dialogues": [
-      "M� z�jem o zbo��?",
-      "Dneska m�m slevu.",
-      "Pozor na policii."
+      "Sháníš něco?",
+      "Prodávám: prasek , extrakt .",
+      "Beru od tebe: bylina , vzácná_bylina .",
+      "Použij 'kup <item>' nebo 'prodej <item>'."
+    ]
+  },
+  {
+    "Name": "zakaznik",
+    "Dialogues": [
+      "Koupím prášek",
+      "Extrakt beru.",
+      "Použij 'prodej prasek' nebo 'prodej extrakt'.",
+      "Zaplatím víc než dealer 😉"
     ]
   }
 ]
