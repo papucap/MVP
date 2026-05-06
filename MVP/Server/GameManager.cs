@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-namespace MVP {
+namespace MVP.Server.Server {
     public class GameManager
     {
         public Dictionary<string, Player> Players = new();
@@ -31,46 +31,24 @@ namespace MVP {
         }
 
         // pohyb hráče
-        public void MovePlayer(Player player, string roomId)
+        public string MovePlayer(Player player, string roomName)
         {
-            if (!Rooms.ContainsKey(roomId))
-            {
-                player.SendMessage("Tato místnost neexistuje.");
-                return;
-            }
+            if (!Rooms.ContainsKey(roomName))
+                return "Taková místnost neexistuje.";
 
-            player.CurrentRoom = Rooms[roomId];
-            player.SendMessage($"Přesunul ses do: {player.CurrentRoom.Name}");
+            player.CurrentRoom = Rooms[roomName];
 
-            DescribeRoom(player);
+            return DescribeRoom(player);
         }
 
         // popis místnosti
-        public void DescribeRoom(Player player)
+        public string DescribeRoom(Player player)
         {
             var room = player.CurrentRoom;
 
-            player.SendMessage($"== {room.Name} ==");
-            player.SendMessage(room.Description);
-
-            // východy
-            player.SendMessage("Východy: " + string.Join(", ", room.Exits));
-
-            // itemy
-            if (room.Items.Count > 0)
-                player.SendMessage("Itemy: " + string.Join(", ", room.Items.Select(i => i.Name)));
-
-            // NPC
-            if (room.NPCs.Count > 0)
-                player.SendMessage("NPC: " + string.Join(", ", room.NPCs.Select(n => n.Name)));
-
-            // ostatní hráči
-            var others = Players.Values
-                .Where(p => p != player && p.CurrentRoom == room)
-                .Select(p => p.Name);
-
-            if (others.Any())
-                player.SendMessage("Hráči: " + string.Join(", ", others));
+            return $"== {room.Name} ==\n" +
+                   $"{room.Description}\n" +
+                   $"Východy: {string.Join(", ", room.Exits)}";
         }
 
         // zpráva všem

@@ -1,4 +1,4 @@
-﻿namespace MVP
+﻿namespace MVP.Server.Server
 { 
 public class Player
 {

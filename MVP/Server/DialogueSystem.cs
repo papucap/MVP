@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
-namespace MVP
+namespace MVP.Server
 {
     public class DialogueSystem
     {
-        public string GetDialogue(NPC npc, Player player)
+        public string GetDialogue(NPC npc, Server.Player player)
         {
             if (player.Money < 500)
             {

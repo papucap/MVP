@@ -1,0 +1,18 @@
+{
+  "club": {
+    "Id": "club",
+    "Name": "Noèní klub",
+    "Description": "Hlasitá hudba, lidi tanèí a obchod jede.",
+    "Exits": ["park", "trh"],
+    "Items": [],
+    "NPCsIds": ["dealer"]
+  },
+  "park": {
+    "Id": "park",
+    "Name": "Temný park",
+    "Description": "Podezøelé místo pro schùzky.",
+    "Exits": ["club"],
+    "Items": [],
+    "NPCsIds": []
+  }
+}

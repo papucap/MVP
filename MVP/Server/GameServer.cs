@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVP.Server.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,14 +7,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVP
+namespace MVP.Server
 {
-    public class Server
+    public class GameServer
     {
         private TcpListener listener;
         private GameManager gameManager;
 
-        public Server(GameManager gm)
+        public GameServer(GameManager gm)
         {
             gameManager = gm;
         }

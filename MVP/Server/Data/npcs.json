@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "dealer",
+    "CurrentRoomId": "club",
+    "Dialogues": [
+      "Máš zájem o zboží?",
+      "Dneska mám slevu.",
+      "Pozor na policii."
+    ]
+  }
+]

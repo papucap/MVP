@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using MVP.Server.Server;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace MVP
+namespace MVP.Server
 {
     public class ClientHandler
     {
@@ -23,8 +20,8 @@ namespace MVP
         public async Task Handle()
         {
             using var stream = client.GetStream();
-            using var reader = new StreamReader(stream);
-            using var writer = new StreamWriter(stream) { AutoFlush = true };
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            using var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true };
 
             await writer.WriteLineAsync("Zadej jméno:");
             string name = await reader.ReadLineAsync();
@@ -35,22 +32,23 @@ namespace MVP
             await writer.WriteLineAsync($"Vítej {name}!");
             await writer.WriteLineAsync("Napiš 'pomoc' pro seznam příkazů.");
 
+            // 👇 pošli room
+            await writer.WriteLineAsync(gameManager.DescribeRoom(player));
+
             try
             {
                 while (true)
                 {
                     var input = await reader.ReadLineAsync();
+                    if (input == null) break;
 
-                    if (input == null)
-                        break;
+                    var response = commandHandler.Handle(player, input);
 
-                    commandHandler.Handle(player, input);
+                    if (!string.IsNullOrEmpty(response))
+                        await writer.WriteLineAsync(response);
                 }
             }
-            catch (Exception)
-            {
-                // ignoruj chyby (např. odpojení)
-            }
+            catch { }
             finally
             {
                 gameManager.RemovePlayer(player);

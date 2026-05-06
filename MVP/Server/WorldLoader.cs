@@ -1,0 +1,45 @@
+﻿using System.Text.Json;
+
+namespace MVP.Server;
+public class WorldLoader
+{
+    public Dictionary<string, Room> LoadWorld()
+    {
+        var basePath = AppContext.BaseDirectory;
+
+        var roomsPath = Path.Combine(basePath, "data", "rooms.json");
+        var npcsPath = Path.Combine(basePath, "data", "npcs.json");
+        var itemsPath = Path.Combine(basePath, "data", "items.json");
+
+        var rooms = JsonSerializer.Deserialize<Dictionary<string, Room>>(
+            File.ReadAllText(roomsPath));
+
+        var npcs = JsonSerializer.Deserialize<List<NPC>>(
+            File.ReadAllText(npcsPath));
+
+        var items = JsonSerializer.Deserialize<List<Item>>(
+            File.ReadAllText(itemsPath));
+
+        foreach (var room in rooms.Values)
+        {
+            foreach (var npcId in room.NPCsIds)
+            {
+                var npc = npcs.FirstOrDefault(n => n.Name == npcId);
+                if (npc != null)
+                {
+                    room.NPCs.Add(npc);
+                }
+            }
+        }
+
+        // napojení itemů podle jména
+        foreach (var room in rooms.Values)
+        {
+            room.Items = items
+                .Where(i => room.Items.Any(x => x.Name == i.Name))
+                .ToList();
+        }
+
+        return rooms;
+    }
+}

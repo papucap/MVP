@@ -1,0 +1,12 @@
+{
+  "dealer": [
+    {
+      "Item": "Basic houby",
+      "Price": 100
+    },
+    {
+      "Item": "Rare houby",
+      "Price": 500
+    }
+  ]
+}
