@@ -7,9 +7,9 @@ public class WorldLoader
     {
         var basePath = AppContext.BaseDirectory;
 
-        var roomsPath = Path.Combine(basePath, "data", "rooms.json");
-        var npcsPath = Path.Combine(basePath, "data", "npcs.json");
-        var itemsPath = Path.Combine(basePath, "data", "items.json");
+        var roomsPath = Path.Combine(basePath, "Server", "Data", "rooms.json");
+        var npcsPath = Path.Combine(basePath, "Server", "Data", "npcs.json");
+        var itemsPath = Path.Combine(basePath, "Server", "Data", "items.json");
 
         var rooms = JsonSerializer.Deserialize<Dictionary<string, Room>>(File.ReadAllText(roomsPath));
         var npcs = JsonSerializer.Deserialize<List<NPC>>(File.ReadAllText(npcsPath));
@@ -39,7 +39,7 @@ public class WorldLoader
     public List<Item> LoadItems()
     {
         var basePath = AppContext.BaseDirectory;
-        var itemsPath = Path.Combine(basePath, "data", "items.json");
+        var itemsPath = Path.Combine(basePath, "Server", "Data", "items.json");
 
         return JsonSerializer.Deserialize<List<Item>>(File.ReadAllText(itemsPath));
     }
