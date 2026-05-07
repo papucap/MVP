@@ -66,7 +66,6 @@ namespace MVP.Server
                 p.SendMessage($"{player.Name}: {text}");
         }
 
-        // 🔥 ITEMY
         public string TakeItem(Player player, string itemName)
         {
             var room = player.CurrentRoom;
@@ -93,7 +92,6 @@ namespace MVP.Server
             return $"Zahodil jsi {item.Name}.";
         }
 
-        // 🔥 OBCHOD
         public string Buy(Player player, string itemName)
         {
             var item = Items.FirstOrDefault(i => i.Name == itemName);
@@ -124,7 +122,6 @@ namespace MVP.Server
             return $"Prodal jsi {item.Name} za {price} Kč.";
         }
 
-        // 🔥 NPC
         public string TalkToNPC(Player player, string npcName)
         {
             var npc = player.CurrentRoom.NPCs.FirstOrDefault(n => n.Name == npcName);
@@ -135,7 +132,6 @@ namespace MVP.Server
             return npc.Dialogues[new Random().Next(npc.Dialogues.Count)];
         }
 
-        // 🔥 QUEST
         public string CheckQuest(Player player)
         {
             if (player.ActiveQuest == "Doruč balíček" &&
@@ -150,7 +146,6 @@ namespace MVP.Server
             return "";
         }
 
-        // 🔥 NPC POHYB
         public async Task StartNPCMovement()
         {
             while (true)

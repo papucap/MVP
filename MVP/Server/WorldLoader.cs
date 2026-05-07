@@ -15,7 +15,6 @@ public class WorldLoader
         var npcs = JsonSerializer.Deserialize<List<NPC>>(File.ReadAllText(npcsPath));
         var items = JsonSerializer.Deserialize<List<Item>>(File.ReadAllText(itemsPath));
 
-        // 🔥 NPC napojení + CurrentRoom
         foreach (var room in rooms.Values)
         {
             foreach (var npcId in room.NPCsIds)
@@ -23,13 +22,12 @@ public class WorldLoader
                 var npc = npcs.FirstOrDefault(n => n.Name == npcId);
                 if (npc != null)
                 {
-                    npc.CurrentRoom = room; // 👈 důležité
+                    npc.CurrentRoom = room; 
                     room.NPCs.Add(npc);
                 }
             }
         }
 
-        // 🔥 Items napojení
         foreach (var room in rooms.Values)
         {
             

@@ -14,7 +14,7 @@ namespace MVP.Server
 
             var loader = new WorldLoader();
             gameManager.Rooms = loader.LoadWorld();
-            gameManager.Items = loader.LoadItems(); // pokud jsi přidal metodu
+            gameManager.Items = loader.LoadItems(); 
 
             _ = gameManager.StartNPCMovement();
 

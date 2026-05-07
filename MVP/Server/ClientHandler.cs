@@ -32,7 +32,6 @@ namespace MVP.Server
             await writer.WriteLineAsync($"Vítej {name}!");
             await writer.WriteLineAsync("Napiš 'pomoc' pro seznam příkazů.");
 
-            // 👇 pošli room
             await writer.WriteLineAsync(gameManager.DescribeRoom(player));
 
             try
