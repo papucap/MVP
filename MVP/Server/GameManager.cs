@@ -151,11 +151,9 @@ namespace MVP.Server
 
         public string CheckWinCondition(Player player)
 {
-    // Hráč vyhrál pokud má 2000+ Kč a splnil všechny questy
     if (player.Money >= 2000 && player.CompletedQuests.Contains("Doruč balíček"))
     {
         player.GameCompleted = true;
-        LeaderboardStorage.Save(player); // uloží do žebříčku
         return "🏆 GRATULUJEME! Dokončil jsi hru!";
     }
     return "";
