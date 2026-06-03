@@ -137,8 +137,7 @@ namespace MVP.Server
 
         public string CheckQuest(Player player)
         {
-            if (player.ActiveQuest == "Doruč balíček" &&
-                player.CurrentRoom.Name == "Noční klub")
+            if (player.ActiveQuest == "Doruč balíček")
             {
                 player.Money += 200;
                 player.ActiveQuest = null;
@@ -149,6 +148,19 @@ namespace MVP.Server
 
             return "";
         }
+
+        public string CheckWinCondition(Player player)
+{
+    // Hráč vyhrál pokud má 2000+ Kč a splnil všechny questy
+    if (player.Money >= 2000 && player.CompletedQuests.Contains("Doruč balíček"))
+    {
+        player.GameCompleted = true;
+        LeaderboardStorage.Save(player); // uloží do žebříčku
+        return "🏆 GRATULUJEME! Dokončil jsi hru!";
+    }
+    return "";
+}
+        
 
         public async Task StartNPCMovement()
         {
