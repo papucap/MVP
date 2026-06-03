@@ -1,0 +1,16 @@
+{
+  "Server": {
+    "Port": 5001
+  },
+  "Game": {
+    "NPCMoveInterval": 10000,
+    "DefaultMoney": 1000,
+    "DefaultItemPrice": 100,
+    "QuestReward": 200
+  },
+  "Paths": {
+    "RoomsFile": "Server/Data/rooms.json",
+    "NpcsFile": "Server/Data/npcs.json",
+    "ItemsFile": "Server/Data/items.json"
+  }
+}
