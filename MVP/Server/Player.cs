@@ -6,6 +6,8 @@ public class Player
     public Room CurrentRoom { get; set; }
     public List<Item> Inventory { get; set; } = new();
     public int Money { get; set; } = 1000;
+    public bool GameCompleted { get; set; }
+    public List<string> CompletedQuests { get; set; } = new();
 
     public string ActiveQuest { get; set; }
 
