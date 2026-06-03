@@ -1,4 +1,4 @@
-﻿using MVP.Server.Server;
+using MVP.Server.Server;
 using System.Linq;
 
 namespace MVP.Server
@@ -13,10 +13,11 @@ namespace MVP.Server
         {
             Players[player.Name] = player;
 
-            if (Rooms.Count > 0)
+            if (player.CurrentRoom == null && Rooms.Count > 0)
                 player.CurrentRoom = Rooms.Values.First();
 
             Broadcast($"{player.Name} se připojil.");
+            Logger.Info($"Hráč přidán do hry: {player.Name}, místnost: {player.CurrentRoom?.Name}");
         }
 
         public void RemovePlayer(Player player)
@@ -31,6 +32,7 @@ namespace MVP.Server
                 return "Taková místnost neexistuje.";
 
             player.CurrentRoom = Rooms[roomName];
+            Logger.Info($"[{player.Name}] přesunul se do: {roomName}");
 
             return DescribeRoom(player) + "\n" + CheckQuest(player);
         }
@@ -69,8 +71,8 @@ namespace MVP.Server
         public string TakeItem(Player player, string itemName)
         {
             var room = player.CurrentRoom;
-
             var item = room.Items.FirstOrDefault(i => i.Name == itemName);
+
             if (item == null)
                 return "Item tu není.";
 
@@ -83,6 +85,7 @@ namespace MVP.Server
         public string DropItem(Player player, string itemName)
         {
             var item = player.Inventory.FirstOrDefault(i => i.Name == itemName);
+
             if (item == null)
                 return "Ten item nemáš.";
 
@@ -111,11 +114,11 @@ namespace MVP.Server
         public string Sell(Player player, string itemName)
         {
             var item = player.Inventory.FirstOrDefault(i => i.Name == itemName);
+
             if (item == null)
                 return "Ten item nemáš.";
 
             int price = 100;
-
             player.Inventory.Remove(item);
             player.Money += price;
 
@@ -139,6 +142,7 @@ namespace MVP.Server
             {
                 player.Money += 200;
                 player.ActiveQuest = null;
+                Logger.Info($"[{player.Name}] splnil quest: Doruč balíček");
 
                 return "✅ Quest splněn! +200 Kč";
             }
