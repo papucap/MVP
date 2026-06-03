@@ -8,6 +8,7 @@ namespace MVP.Server
         public Dictionary<string, Player> Players = new();
         public Dictionary<string, Room> Rooms = new();
         public List<Item> Items = new();
+        public List<Quest> Quests = new();
 
         public void AddPlayer(Player player)
         {
@@ -16,8 +17,8 @@ namespace MVP.Server
             if (player.CurrentRoom == null && Rooms.Count > 0)
                 player.CurrentRoom = Rooms.Values.First();
 
-            Broadcast($"{player.Name} se připojil.");
-            Logger.Info($"Hráč přidán do hry: {player.Name}, místnost: {player.CurrentRoom?.Name}");
+            Broadcast($"{player.Name} se pripojil.");
+            Logger.Info($"Hrac pridan do hry: {player.Name}, mistnost: {player.CurrentRoom?.Name}");
         }
 
         public void RemovePlayer(Player player)
@@ -29,12 +30,15 @@ namespace MVP.Server
         public string MovePlayer(Player player, string roomName)
         {
             if (!Rooms.ContainsKey(roomName))
-                return "Taková místnost neexistuje.";
+                return "Takova mistnost neexistuje.";
+
+            if (!player.CurrentRoom.Exits.Contains(roomName))
+                return $"Tudy se tam dostat neda. Vychody: {string.Join(", ", player.CurrentRoom.Exits)}";
 
             player.CurrentRoom = Rooms[roomName];
-            Logger.Info($"[{player.Name}] přesunul se do: {roomName}");
+            Logger.Info($"[{player.Name}] presunul se do: {roomName}");
 
-            return DescribeRoom(player) + "\n" + CheckQuest(player);
+            return DescribeRoom(player);
         }
 
         public string DescribeRoom(Player player)
@@ -43,17 +47,22 @@ namespace MVP.Server
 
             var items = room.Items.Count > 0
                 ? "Itemy: " + string.Join(", ", room.Items.Select(i => i.Name))
-                : "Žádné itemy";
+                : "Zadne itemy";
 
             var npcs = room.NPCs.Count > 0
                 ? "NPC: " + string.Join(", ", room.NPCs.Select(n => n.Name))
-                : "Žádná NPC";
+                : "Zadna NPC";
+
+            var questHint = player.ActiveQuest != null
+                ? $"Aktivni quest: {player.ActiveQuest}"
+                : "";
 
             return $"== {room.Name} ==\n" +
                    $"{room.Description}\n" +
-                   $"Východy: {string.Join(", ", room.Exits)}\n" +
+                   $"Vychody: {string.Join(", ", room.Exits)}\n" +
                    $"{items}\n" +
-                   $"{npcs}";
+                   $"{npcs}" +
+                   (string.IsNullOrEmpty(questHint) ? "" : "\n" + questHint);
         }
 
         public void Broadcast(string message)
@@ -74,12 +83,18 @@ namespace MVP.Server
             var item = room.Items.FirstOrDefault(i => i.Name == itemName);
 
             if (item == null)
-                return "Item tu není.";
+                return "Item tu neni.";
 
             room.Items.Remove(item);
             player.Inventory.Add(item);
 
-            return $"Sebral jsi {item.Name}.";
+            var result = $"Sebral jsi {item.Name}.";
+
+            var questResult = CheckItemQuest(player, itemName);
+            if (!string.IsNullOrEmpty(questResult))
+                result += "\n" + questResult;
+
+            return result;
         }
 
         public string DropItem(Player player, string itemName)
@@ -87,7 +102,7 @@ namespace MVP.Server
             var item = player.Inventory.FirstOrDefault(i => i.Name == itemName);
 
             if (item == null)
-                return "Ten item nemáš.";
+                return "Ten item nemas.";
 
             player.Inventory.Remove(item);
             player.CurrentRoom.Items.Add(item);
@@ -100,15 +115,15 @@ namespace MVP.Server
             var item = Items.FirstOrDefault(i => i.Name == itemName);
             if (item == null) return "Item neexistuje.";
 
-            int price = 100;
+            int price = item.Price > 0 ? item.Price : 100;
 
             if (player.Money < price)
-                return "Nemáš peníze.";
+                return "Nemas penize.";
 
             player.Money -= price;
-            player.Inventory.Add(item);
+            player.Inventory.Add(new Item { Name = item.Name, Price = item.Price });
 
-            return $"Koupil jsi {item.Name} za {price} Kč.";
+            return $"Koupil jsi {item.Name} za {price} Kc.";
         }
 
         public string Sell(Player player, string itemName)
@@ -116,13 +131,13 @@ namespace MVP.Server
             var item = player.Inventory.FirstOrDefault(i => i.Name == itemName);
 
             if (item == null)
-                return "Ten item nemáš.";
+                return "Ten item nemas.";
 
-            int price = 100;
+            int price = item.Price > 0 ? item.Price : 100;
             player.Inventory.Remove(item);
             player.Money += price;
 
-            return $"Prodal jsi {item.Name} za {price} Kč.";
+            return $"Prodal jsi {item.Name} za {price} Kc.";
         }
 
         public string TalkToNPC(Player player, string npcName)
@@ -130,35 +145,123 @@ namespace MVP.Server
             var npc = player.CurrentRoom.NPCs.FirstOrDefault(n => n.Name == npcName);
 
             if (npc == null)
-                return "NPC tu není.";
+                return "NPC tu neni.";
 
-            return npc.Dialogues[new Random().Next(npc.Dialogues.Count)];
+            var dialogue = npc.Dialogues[new Random().Next(npc.Dialogues.Count)];
+
+            var questResult = CheckNPCQuest(player, npcName);
+
+            return dialogue + (string.IsNullOrEmpty(questResult) ? "" : "\n" + questResult);
         }
 
-        public string CheckQuest(Player player)
+        public string AcceptQuest(Player player, int index)
         {
-            if (player.ActiveQuest == "Doruč balíček")
-            {
-                player.Money += 200;
-                player.ActiveQuest = null;
-                Logger.Info($"[{player.Name}] splnil quest: Doruč balíček");
+            if (player.ActiveQuest != null)
+                return $"Uz mas aktivni quest: {player.ActiveQuest}. Dokoncit ho nejdriv.";
 
-                return "✅ Quest splněn! +200 Kč";
+            if (index < 0 || index >= Quests.Count)
+                return "Takovy quest neexistuje.";
+
+            var quest = Quests[index];
+
+            if (player.CompletedQuests.Contains(quest.Name))
+                return "Tento quest jsi uz splnil.";
+
+            player.ActiveQuest = quest.Name;
+            Logger.Info($"[{player.Name}] prijal quest: {quest.Name}");
+
+            return $"Prijal jsi quest: {quest.Name}\n{quest.Description}";
+        }
+
+        public string ListQuests(Player player)
+        {
+            var lines = new List<string> { "=== QUESTY ===" };
+
+            for (int i = 0; i < Quests.Count; i++)
+            {
+                var q = Quests[i];
+                string status;
+
+                if (player.CompletedQuests.Contains(q.Name))
+                    status = "[splneno]";
+                else if (player.ActiveQuest == q.Name)
+                    status = "[aktivni]";
+                else
+                    status = "[nesplneno]";
+
+                lines.Add($"{i + 1}. {status} {q.Name} - odmena: {q.RewardMoney} Kc");
+                lines.Add($"   {q.Description}");
             }
+
+            lines.Add("\nPro prijeti questu napis: quest <cislo>");
+            return string.Join("\n", lines);
+        }
+
+        private string CheckItemQuest(Player player, string pickedItemName)
+        {
+            if (player.ActiveQuest == null) return "";
+
+            var quest = Quests.FirstOrDefault(q => q.Name == player.ActiveQuest);
+            if (quest == null) return "";
+
+            if (!string.IsNullOrEmpty(quest.TargetItem) && quest.TargetItem == pickedItemName)
+                return TryCompleteQuest(player, quest);
 
             return "";
         }
 
-        public string CheckWinCondition(Player player)
-{
-    if (player.Money >= 2000 && player.CompletedQuests.Contains("Doruč balíček"))
-    {
-        player.GameCompleted = true;
-        return "🏆 GRATULUJEME! Dokončil jsi hru!";
-    }
-    return "";
-}
-        
+        private string CheckNPCQuest(Player player, string npcName)
+        {
+            if (player.ActiveQuest == null) return "";
+
+            var quest = Quests.FirstOrDefault(q => q.Name == player.ActiveQuest);
+            if (quest == null) return "";
+
+            if (!string.IsNullOrEmpty(quest.TargetNPC) && quest.TargetNPC == npcName)
+                return TryCompleteQuest(player, quest);
+
+            return "";
+        }
+
+        private string TryCompleteQuest(Player player, Quest quest)
+        {
+            if (!string.IsNullOrEmpty(quest.RequiredItem))
+            {
+                var requiredItem = player.Inventory.FirstOrDefault(i => i.Name == quest.RequiredItem);
+                if (requiredItem == null)
+                    return $"Potrebujes mit u sebe: {quest.RequiredItem}";
+
+                player.Inventory.Remove(requiredItem);
+            }
+
+            player.Money += quest.RewardMoney;
+            player.CompletedQuests.Add(quest.Name);
+            player.ActiveQuest = null;
+
+            Logger.Info($"[{player.Name}] splnil quest: {quest.Name}, odmena: {quest.RewardMoney} Kc");
+
+            var result = $"Quest splnen: {quest.Name}!\n+{quest.RewardMoney} Kc (mas celkem {player.Money} Kc)";
+
+            var winMsg = CheckWinCondition(player);
+            if (!string.IsNullOrEmpty(winMsg))
+                result += "\n" + winMsg;
+
+            return result;
+        }
+
+        private string CheckWinCondition(Player player)
+        {
+            if (player.CompletedQuests.Count >= Quests.Count)
+            {
+                player.GameCompleted = true;
+                Logger.Info($"[{player.Name}] dokoncil hru s {player.Money} Kc");
+
+                return "\n=== GRATULUJEME! ===\n" +
+                       "Dokoncil jsi vsechny questy!\n";
+            }
+
+            return "";
+        }
 
         public async Task StartNPCMovement()
         {
@@ -177,7 +280,7 @@ namespace MVP.Server
                     newRoom.NPCs.Add(npc);
                     npc.CurrentRoom = newRoom;
 
-                    Broadcast($"🚶 {npc.Name} odešel do {newRoom.Name}");
+                    Broadcast($"{npc.Name} odsel do {newRoom.Name}");
                 }
             }
         }

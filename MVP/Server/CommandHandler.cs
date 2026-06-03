@@ -23,7 +23,7 @@ namespace MVP.Server
             switch (command)
             {
                 case "pomoc":
-                    return "Příkazy: jdi <místo>, prozkoumat, inventar, vezmi <item>, zahod <item>, rekni <text>, krik <text>, kup <item>, prodej <item>, quest";
+                    return "Příkazy: jdi <místo>, prozkoumat, inventar, vezmi <item>, zahod <item>, rekni <text>, \n krik <text>, kup <item>, prodej <item>, quest, questy (seznam questu)";
 
                 case "jdi":
                     if (parts.Length < 2)
@@ -73,9 +73,14 @@ namespace MVP.Server
                         return "S kým chceš mluvit?";
                     return gameManager.TalkToNPC(player, parts[1]);
 
+                case "questy":
+                    return gameManager.ListQuests(player);
+
                 case "quest":
-                    player.ActiveQuest = "Doruč balíček";
-                    return "📜 Přijal jsi quest: Doruč balíček";
+                    if (parts.Length < 2) return "Napiš číslo questu, např: quest 1";
+                    if (!int.TryParse(parts[1], out int index))
+                        return "Zadej číslo questu.";
+                    return gameManager.AcceptQuest(player, index - 1);
 
 
                 default:

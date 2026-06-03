@@ -9,12 +9,14 @@ namespace MVP.Server
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.InputEncoding = System.Text.Encoding.UTF8;
 
-
             var gameManager = new GameManager();
 
             var loader = new WorldLoader();
             gameManager.Rooms = loader.LoadWorld();
-            gameManager.Items = loader.LoadItems(); 
+            gameManager.Items = loader.LoadItems();
+            gameManager.Quests = loader.LoadQuests();
+
+            Logger.Info("Server spuštěn.");
 
             _ = gameManager.StartNPCMovement();
 

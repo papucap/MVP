@@ -9,11 +9,14 @@ public class WorldLoader
 
         var roomsPath = Path.Combine(basePath, "Server", "Data", "rooms.json");
         var npcsPath = Path.Combine(basePath, "Server", "Data", "npcs.json");
-        var itemsPath = Path.Combine(basePath, "Server", "Data", "items.json");
 
-        var rooms = JsonSerializer.Deserialize<Dictionary<string, Room>>(File.ReadAllText(roomsPath));
-        var npcs = JsonSerializer.Deserialize<List<NPC>>(File.ReadAllText(npcsPath));
-        var items = JsonSerializer.Deserialize<List<Item>>(File.ReadAllText(itemsPath));
+        var rooms = JsonSerializer.Deserialize<Dictionary<string, Room>>(
+            File.ReadAllText(roomsPath),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        var npcs = JsonSerializer.Deserialize<List<NPC>>(
+            File.ReadAllText(npcsPath),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         foreach (var room in rooms.Values)
         {
@@ -22,15 +25,10 @@ public class WorldLoader
                 var npc = npcs.FirstOrDefault(n => n.Name == npcId);
                 if (npc != null)
                 {
-                    npc.CurrentRoom = room; 
+                    npc.CurrentRoom = room;
                     room.NPCs.Add(npc);
                 }
             }
-        }
-
-        foreach (var room in rooms.Values)
-        {
-            
         }
 
         return rooms;
@@ -40,8 +38,17 @@ public class WorldLoader
     {
         var basePath = AppContext.BaseDirectory;
         var itemsPath = Path.Combine(basePath, "Server", "Data", "items.json");
-
-        return JsonSerializer.Deserialize<List<Item>>(File.ReadAllText(itemsPath));
+        return JsonSerializer.Deserialize<List<Item>>(
+            File.ReadAllText(itemsPath),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
+    public List<Quest> LoadQuests()
+    {
+        var basePath = AppContext.BaseDirectory;
+        var questsPath = Path.Combine(basePath, "Server", "Data", "quests.json");
+        return JsonSerializer.Deserialize<List<Quest>>(
+            File.ReadAllText(questsPath),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
 }
